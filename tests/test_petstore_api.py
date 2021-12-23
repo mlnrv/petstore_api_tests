@@ -20,9 +20,5 @@ class TestPetPetstoreAPI:
     pass
 
 
-class TestStorePetstoreAPI:
-    pass
-
-
 class TestUserPetstoreAPI:
     pass
