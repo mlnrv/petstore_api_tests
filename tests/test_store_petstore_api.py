@@ -34,14 +34,16 @@ class TestStorePetstoreAPI(StoreCheckerPetstoreAPI, StorePetstoreAPI):
     @pytest.fixture()
     @pytest.mark.parametrize('order_id', TestData.ID_ORDERS_VALID)
     def delete_order(self, order_id: int):
-        """Condition for placing new order"""
+        """Delete order for placing new order"""
         self.delete_store_order(order_id=order_id)
         yield
         self.delete_store_order(order_id=order_id)
 
     @pytest.fixture()
     @pytest.mark.parametrize('order_id', TestData.ID_ORDERS_VALID)
-    def create_orders(self, order_id):
+    def create_order(self, order_id):
+        """Create new order to work with it"""
+
         TestData.ORDER_DATA['id'] = order_id
         self.place_new_order(data=TestData.ORDER_DATA)
         yield {'order_data': TestData.ORDER_DATA}
@@ -50,6 +52,8 @@ class TestStorePetstoreAPI(StoreCheckerPetstoreAPI, StorePetstoreAPI):
     @pytest.fixture()
     @pytest.mark.parametrize('order_id', TestData.ID_ORDERS_INVALID)
     def create_incorrect_orders(self, order_id):
+        """Try to place incorrect order"""
+
         TestData.ORDER_DATA['id'] = order_id
         self.place_new_order(data=TestData.ORDER_DATA)
         yield
@@ -79,16 +83,17 @@ class TestStorePetstoreAPI(StoreCheckerPetstoreAPI, StorePetstoreAPI):
         )
 
     @pytest.mark.parametrize('order_id', TestData.ID_ORDERS_VALID)
-    def test_get_store_order(self, create_orders, order_id: int):
+    def test_get_store_order(self, create_order, order_id: int):
         """Existing order has id and correct status code from the response"""
         response = self.get_store_order(order_id=order_id)
 
         self.check_order_exists(response=response, order_id=order_id)
-        self.check_order_body(response=response, request_body=create_orders['order_data'])
+        self.check_order_body(response=response, request_body=create_order['order_data'])
 
     @pytest.mark.parametrize('order_id', TestData.ID_ORDERS_VALID)
-    def test_get_store_order_many_times_should_return_the_same_response(self, create_orders, order_id: int):
+    def test_get_store_order_many_times_should_return_the_same_response(self, create_order, order_id: int):
         """Some orders returns different responses from time to time"""
+
         count_times = 10
         status_codes = [self.get_store_order(order_id=order_id).status_code for _ in range(count_times)]
         unique_status_codes = len(set(status_codes))
@@ -105,6 +110,7 @@ class TestStorePetstoreAPI(StoreCheckerPetstoreAPI, StorePetstoreAPI):
 
     @pytest.mark.parametrize('order_id', TestData.ID_ORDERS_VALID)
     def test_post_store_order(self, delete_order, order_id: int):
+        """Place new order and check the data from order is correct"""
 
         TestData.ORDER_DATA['id'] = order_id
         response = self.place_new_order(data=TestData.ORDER_DATA)
