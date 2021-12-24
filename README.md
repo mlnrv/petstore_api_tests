@@ -6,6 +6,7 @@ How to run functional tests for api:
 3. Enter the command to run virtual environment:
 
 `. bin/create_and_run_virtualenv.sh`
+
 4. Enter the command to run functional tests:
 
 ``. bin/run_api_functional_tests.sh``
