@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pytest -v --tb=auto -s -m functional
+pytest -v --tb=auto -m functional

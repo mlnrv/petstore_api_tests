@@ -11,7 +11,7 @@ def decode_response_to_json(response):
                                f'\nresponse: {response}')
 
 
-def make_request(url: str, method: str = 'get', auth: tuple = None,
+def send_request(url: str, method: str = 'get', auth: tuple = None,
                  data: dict = None, headers: dict = None, send_as_json: bool = False):
     """Send request (using requests library) and return response"""
 
@@ -27,8 +27,7 @@ def make_request(url: str, method: str = 'get', auth: tuple = None,
         else:
             response = request(**params, data=data)
     except Exception:
-        raise InterruptedError(f'Error while connecting to url:'
-                               f'\n"{url}"'
-                               f'\n\nwith params:\n"{params}"'
-                               f'\n\nand data:\n"{data}"')
+        raise InterruptedError(f'Error while sending a request:'
+                               f'\nwith params: \n"{params}"'
+                               f'\nand data: \n"{data}"')
     return response
